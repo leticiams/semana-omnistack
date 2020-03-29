@@ -3,6 +3,12 @@ const express = require('express');
 const app = express();
 
 /**
+ * Transforma a requisição feita em JSON no Body Request para Javascript
+ */
+
+app.use(express.json());
+
+/**
  * Rota / Recurso
  */
 
@@ -20,13 +26,13 @@ const app = express();
   * 
   * Query Params: Parâmetros nomeados enviados na rota após "?" (Filtors, paginação)
   * Route Params: Parâmetros utilizados para identificar recursos
-  * Request Body: 
+  * Request Body: Corpo da requisição, utilizado para criar ou alterar recursos
   */
 
-app.get('/users/:id', (request, response) => {
-    const params = request.params;
+app.post('/users', (request, response) => {
+    const body = request.body;
 
-    console.log(params);
+    console.log(body);
 
     return response.json({
         evento: 'Semana Omnistack 11.0',
