@@ -1,4 +1,7 @@
 const express = require('express');
+const crypto = require('crypto');
+
+const connection = require('./database/connection');
 
 const routes = express.Router();
 
@@ -35,15 +38,31 @@ const routes = express.Router();
     * ps: Knexjs é o quey builder mais utilizado para nodejs
     */
 
-   routes.post('/users', (request, response) => {
-    const body = request.body;
+    routes.get('/ongs', async (request, response) => {
+        const ongs = await connection('ongs').select('*');
 
-    console.log(body);
+        return response.json(ongs);
+    })
 
-    return response.json({
-        evento: 'Semana Omnistack 11.0',
-        aluno: 'Letícia Alves'
-    });
+   routes.post('/ongs', async (request, response) => {
+    const { name, email, whatsapp, city, uf } = request.body;
+
+    /**
+     * Gerando ids de quatro números randômicos
+     */
+
+    const id = crypto.randomBytes(4).toString('HEX');
+
+    await connection('ongs').insert({
+      id,
+      name, 
+      email, 
+      whatsapp,
+      city,
+      uf,
+    })
+
+    return response.json({ id });
 });
 
 module.exports = routes;
